@@ -1,2 +1,15 @@
-h1 Welcome to Harp.
-h3 This is yours to own. Enjoy.
+h1 Knight's Tour
+
+nav(id="ColumnController")
+	button(id="ColDecrease") +
+	button(id="ColIncrease") -
+
+nav(id="RowController")
+	button(id="RowDecrease") +
+	button(id="RowIncrease") -
+
+#ChessTable
+	each r in [1,2,3,4]
+		.row
+			each c in [1,2,3,4]
+				.column(data-rid = r, data-cid = c, data-filled = true)

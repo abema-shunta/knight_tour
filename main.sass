@@ -1,0 +1,128 @@
+
+// _.Prefix_Omitter
+
+=_transform($arguments)
+  -webkit-transform: $arguments
+  transform: $arguments
+
+=_transform-style($arguments)
+  -webkit-transform-style: $arguments
+  transform-style: $arguments
+
+=_transform-origin($arguments)
+  -webkit-transform-origin: $arguments
+  transform-origin: $arguments
+
+=_transition($arguments)
+  -webkit-transition: $arguments
+  transition: $arguments
+
+=_animation($arguments)
+  -webkit-animation: $arguments
+  animation: $arguments
+
+=_box-shadow($arguments)
+  -webkit-box-shadow: $arguments
+  box-shadow: $arguments
+
+=_appearance($arguments)
+  -webkit-appearance: $arguments
+  appearance: $arguments
+
+=_box-sizing($arguments)
+  -webkit-box-sizing: $arguments
+  box-sizing: $arguments
+
+=_border-radius($arguments)
+  -webkit-border-radius: $arguments
+  border-radius: $arguments
+
+=_animation-delay($arguments)
+  -webkit-animation-delay: $arguments
+  animation-delay: $arguments
+
+=_gradient($start, $stop) 
+  background: -webkit-gradient(linear, center top, center bottom, from($start), to($stop))
+  background: linear-gradient(top center, $start 0%, $stop 100%)
+
+// Utils
+
+=placeholder-text-shadow($shadow) 
+  &:-moz-placeholder
+    text-shadow: $shadow
+  &::-webkit-input-placeholder
+    text-shadow: $shadow
+
+=placeholder-color($color) 
+  &:-moz-placeholder
+    color: $color
+  &::-webkit-input-placeholder
+    color: $color
+
+=setFixedOrigin($top, $left: $top)
+  position: fixed
+  display: block
+  top: $top
+  left: $left
+
+=setFixedOriginRight($top, $right)
+  position: fixed
+  display: block
+  top: $top
+  right: $right
+
+=setFixedAnchor($bottom, $right)
+  position: fixed
+  display: block
+  bottom: $bottom
+  right: $right
+
+=setOrigin($top, $left: $top)
+  position: absolute
+  display: block
+  top: $top
+  left: $left
+
+=setOriginRight($top, $right: $top)
+  position: absolute
+  display: block
+  top: $top
+  right: $right
+
+=setAnchor($bottom, $right: $bottom)
+  position: absolute
+  display: block
+  bottom: $bottom
+  right: $right
+
+=setSize($width, $height: $width)
+  width: $width
+  height: $height
+
+=setSpacing($margin, $padding: $margin)
+  margin: $margin
+  padding: $padding
+
+=trancateTail
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+=debug($color: #FFF)
+  background: $color
+  border: 1px solid #333
+  +_box-sizing(border-box)
+
+body
+  font-family: "Quicksand", sans-serif
+  text-align: center
+  margin: 0
+  padding: 0
+
+#ChessTable
+  +setOrigin(0px)
+  background: #F00
+  .row 
+    +setSpacing(0)
+  .column  
+    +setSpacing(0)
