@@ -119,6 +119,13 @@ body
   margin: 0
   padding: 0
 
+h1
+  +setSpacing(0) 
+  font-size : 50px
+  line-height: 120px 
+  height: 120px 
+  
+
 #ChessTable
   +setOrigin(0px)
   background: #F00
@@ -126,3 +133,23 @@ body
     +setSpacing(0)
   .column  
     +setSpacing(0)
+
+nav > button
+  +setSize(30px, 28px)
+  display: block
+  position: absolute
+  +_border_radius(5px)
+  border: 0px #FFF solid
+  outline: none
+  -webkit-appearance: none
+  appearance: none
+  +_box-shadow(0px 2px 0px #999)
+  background: #CCC
+  font-size: 20px
+  font-weight: bold
+  cursor: pointer
+  text-shadow: 0px 1px 0px #FFF
+  line-height: 26px
+  &:active 
+    +_box-shadow((0px 2px 0px #FFF inset, 0px 2px 0px #CCC))
+    line-height: 30px
