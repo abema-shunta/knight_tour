@@ -66,16 +66,20 @@ do initializeUI = ()->
 	do updateUI
 	$("#ColIncrease").click ()-> 
 		_.COL = caltivate(_.COL + 1) 
+		_.ROW = caltivate(_.ROW + 1) 
 		do updateColumn
+		do updateRow
 	$("#ColDecrease").click ()-> 
-			_.COL = caltivate(_.COL - 1) 
-			do updateColumn
+		_.COL = caltivate(_.COL - 1) 
+		_.ROW = caltivate(_.ROW - 1) 
+		do updateColumn
+		do updateRow
 	$("#RowIncrease").click ()-> 
-			_.ROW = caltivate(_.ROW + 1) 
-			do updateRow
+		_.ROW = caltivate(_.ROW + 1) 
+		do updateRow
 	$("#RowDecrease").click ()-> 
-			_.ROW = caltivate(_.ROW - 1) 
-			do updateRow
+		_.ROW = caltivate(_.ROW - 1) 
+		do updateRow
 
 window.onresize = ()->
 	do getWindowSize
