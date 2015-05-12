@@ -150,6 +150,19 @@ nav > button
   cursor: pointer
   text-shadow: 0px 1px 0px #FFF
   line-height: 26px
-  &:active 
+  &:active:not(.disabled)
     +_box-shadow((0px 2px 0px #FFF inset, 0px 2px 0px #CCC))
     line-height: 30px
+  &.disabled 
+    opacity: 0.5
+    cursor: not-allowed
+
+nav > div
+  display: block 
+  position: absolute
+  +setSize(40px)
+  font-size: 30px
+  font-weight: bold
+  line-height: 30px
+  text-align: center
+

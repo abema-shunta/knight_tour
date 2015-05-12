@@ -1,12 +1,14 @@
 h1 Knight's Tour
 
 nav(id="ColumnController")
-	button(id="ColDecrease") +
-	button(id="ColIncrease") -
+	button(id="ColDecrease") -
+	#ColNumber 0
+	button(id="ColIncrease") +
 
 nav(id="RowController")
-	button(id="RowDecrease") +
-	button(id="RowIncrease") -
+	button(id="RowDecrease") -
+	#RowNumber 0
+	button(id="RowIncrease") +
 
 #ChessTable
 	each r in [1,2,3,4]
