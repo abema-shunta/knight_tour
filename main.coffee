@@ -65,6 +65,7 @@ updateUI = ()->
 do updateColumn = ()->
 
 	$("#ColNumber").text _.COL
+
 	if _.COL == _.MIN 
 		$("#ColDecrease").addClass("disabled")
 	else if _.COL == _.MAX 
@@ -76,6 +77,7 @@ do updateColumn = ()->
 do updateRow = ()->
 
 	$("#RowNumber").text _.ROW
+	
 	if _.ROW == _.MIN 
 		$("#RowDecrease").addClass("disabled")
 	else if _.ROW == _.MAX 
@@ -83,7 +85,48 @@ do updateRow = ()->
 	else
 		$("#RowIncrease").removeClass()
 		$("#RowDecrease").removeClass()
- 
+
+updateTableByIncreaceCol = ()->
+
+	TEMP = []
+	for i in [0..(_.COL * _.ROW)-1]
+		TEMP[i] = true
+	PCOL = _.COL-1
+	for t,i in _.TABLE.length
+		row = parseInt(PCOL/i)
+		TEMP[i + row] = _.TABLE[i]
+
+	_.TABLE = TEMP
+
+updateTableByDecreaceCol = ()->
+
+	TEMP = []
+	for i in [0..(_.COL * _.ROW)-1]
+		TEMP[i] = true
+	PCOL = _.COL + 1
+
+	for t,i in _.TABLE.length
+		row = parseInt(PCOL/i)
+		TEMP[i - row] = _.TABLE[i]
+
+	_.TABLE = TEMP
+
+updateTableByIncreaceRow = ()->
+	TEMP = []
+	for i in [0..(_.COL * _.ROW)-1]
+		TEMP[i] = true
+	for t,i in _.TABLE.length
+		TEMP[i] = _.TABLE[i]
+	_.TABLE = TEMP
+
+updateTableByDecreaceRow = ()->
+	TEMP = []
+	for i in [0..(_.COL * _.ROW)-1]
+		TEMP[i] = _.TABLE[i]
+	_.TABLE = TEMP
+
+
+
 do initializeUI = ()->
 
 	# InitializeTable
@@ -99,26 +142,50 @@ do initializeUI = ()->
 	do updateUI
 
 	$("#ColIncrease").click ()-> 
+
+		needsUpdateCol = _.COL != _.MAX
+		needsUpdateRow = _.ROW != _.MAX
+
 		_.COL = caltivate(_.COL + 1) 
 		_.ROW = caltivate(_.ROW + 1) 
+	
+		if needsUpdateCol
+			do updateTableByIncreaceCol 
+		else if needsUpdateRow
+			do updateTableByIncreaceRow 
+
 		do updateColumn
 		do updateRow
 		do updateUI
 
 	$("#ColDecrease").click ()-> 
+		
+		needsUpdateCol = _.COL != _.MIN
+		needsUpdateRow = _.ROW != _.MAX
+
 		_.COL = caltivate(_.COL - 1) 
 		_.ROW = caltivate(_.ROW - 1) 
+
+		if needsUpdateCol
+			do updateTableByDecreaceCol 
+		else if needsUpdateRow
+			do updateTableByDecreaceRow
+
 		do updateColumn
 		do updateRow
 		do updateUI
 
 	$("#RowIncrease").click ()-> 
+
 		_.ROW = caltivate(_.ROW + 1) 
+		do updateTableByIncreaceRow 
 		do updateRow
 		do updateUI
 
 	$("#RowDecrease").click ()-> 
+
 		_.ROW = caltivate(_.ROW - 1) 
+		do updateTableByDecreaceRow
 		do updateRow
 		do updateUI
 
