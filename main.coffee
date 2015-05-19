@@ -28,10 +28,15 @@ do getWindowSize = ()->
   _.WIDTH = w.innerWidth || e.clientWidth || g.clientWidth
   _.HEIGHT = w.innerHeight|| e.clientHeight|| g.clientHeight
 
-do updateUI = ()->
+updateUI = ()->
+
+	_.SQUARE_SIZE = _.WIDTH/(2*_.COL)
+	_.CHESS_WIDTH = _.SQUARE_SIZE * _.COL
+	_.CHESS_HEIGHT = _.SQUARE_SIZE * _.ROW
+
 	$("#ChessTable").css 
-		width: "#{_.WIDTH/2}px"
-		height: "#{_.WIDTH/2}px"
+		width: "#{_.CHESS_WIDTH}px"
+		height: "#{_.CHESS_HEIGHT}px"
 		top: "#{_.TOP}px"
 		left: "#{_.WIDTH/4}px"
 
@@ -39,10 +44,26 @@ do updateUI = ()->
 	$("#ColIncrease").css {top: "#{_.HEADER_SIZE}px", left: "#{_.WIDTH*3/4 - _.BUTTON_SIZE}px"}
 	$("#ColNumber").css {top: "#{_.HEADER_SIZE}px", left: "#{_.WIDTH/2 - _.LABEL_SIZE/2}px"}
 	$("#RowDecrease").css {top: "#{_.TOP}px", left: "#{_.WIDTH/4 - _.BUTTON_SIZE - _.BUTTON_MARGIN}px"}
-	$("#RowIncrease").css {top: "#{_.TOP + _.WIDTH/2 - _.BUTTON_SIZE}px", left: "#{_.WIDTH/4 - _.BUTTON_SIZE - _.BUTTON_MARGIN}px"}
-	$("#RowNumber").css {top: "#{_.TOP + _.WIDTH/4 - _.LABEL_SIZE/2}px", left: "#{_.WIDTH/4 - _.LABEL_SIZE}px"}
+	$("#RowIncrease").css {top: "#{_.TOP + _.CHESS_HEIGHT - _.BUTTON_SIZE}px", left: "#{_.WIDTH/4 - _.BUTTON_SIZE - _.BUTTON_MARGIN}px"}
+	$("#RowNumber").css {top: "#{_.TOP + _.CHESS_HEIGHT/2 - _.LABEL_SIZE/2}px", left: "#{_.WIDTH/4 - _.LABEL_SIZE}px"}
+
+	_.SVG.attr("width", _.CHESS_WIDTH).attr("height", _.CHESS_HEIGHT)
+	
+	_.RECT = _.RECT.data(_.TABLE)      
+	_.RECT.enter().append("rect")	      
+	_.RECT.attr("width", (d)-> _.SQUARE_SIZE)
+			.attr("height", (d)-> _.SQUARE_SIZE)
+			.attr("x", (d,i)-> (i % _.ROW) * _.SQUARE_SIZE )
+			.attr("y", (d,i)-> parseInt(i / _.COL) * _.SQUARE_SIZE )
+			.attr("fill", (d)-> if d then "#F00" else "#0F0")
+			.attr("stroke", (d)-> if d then "#FFF" else "#FFF")
+			.attr("stroke-width", "2px")
+	_.RECT.exit().remove()
+
+	return
 	
 do updateColumn = ()->
+
 	$("#ColNumber").text _.COL
 	if _.COL == _.MIN 
 		$("#ColDecrease").addClass("disabled")
@@ -53,6 +74,7 @@ do updateColumn = ()->
 		$("#ColDecrease").removeClass()
 
 do updateRow = ()->
+
 	$("#RowNumber").text _.ROW
 	if _.ROW == _.MIN 
 		$("#RowDecrease").addClass("disabled")
@@ -61,26 +83,45 @@ do updateRow = ()->
 	else
 		$("#RowIncrease").removeClass()
 		$("#RowDecrease").removeClass()
-
+ 
 do initializeUI = ()->
+
+	# InitializeTable
+	_.TABLE = []
+	for i in [1.._.COL]
+		for j in [1.._.ROW]
+			_.TABLE.push true
+
+	_.SVG = d3.select("#ChessTable").append("svg")
+	_.RECT_GROUP = _.SVG.append("g").attr("id", "Rects")
+	_.RECT = _.SVG.selectAll("rect")
+
 	do updateUI
+
 	$("#ColIncrease").click ()-> 
 		_.COL = caltivate(_.COL + 1) 
 		_.ROW = caltivate(_.ROW + 1) 
 		do updateColumn
 		do updateRow
+		do updateUI
+
 	$("#ColDecrease").click ()-> 
 		_.COL = caltivate(_.COL - 1) 
 		_.ROW = caltivate(_.ROW - 1) 
 		do updateColumn
 		do updateRow
+		do updateUI
+
 	$("#RowIncrease").click ()-> 
 		_.ROW = caltivate(_.ROW + 1) 
 		do updateRow
+		do updateUI
+
 	$("#RowDecrease").click ()-> 
 		_.ROW = caltivate(_.ROW - 1) 
 		do updateRow
+		do updateUI
 
 window.onresize = ()->
 	do getWindowSize
-	do initializeUI
+	do updateUI
