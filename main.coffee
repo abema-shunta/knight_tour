@@ -66,7 +66,7 @@ updateUI = ()->
 			.attr("height", (d)-> _.SQUARE_SIZE)
 			.attr("x", (d,i)-> (i % _.COL) * _.SQUARE_SIZE )
 			.attr("y", (d,i)-> parseInt(i / _.COL) * _.SQUARE_SIZE )
-			.attr("fill", (d)-> if d then "#C40" else "#EEE")
+			.attr("fill", (d)-> if d then "#C00" else "#EEE")
 			.attr("stroke", (d)-> if d then "#FFF" else "#FFF")
 			.attr("stroke-width", "2px")
 
@@ -83,6 +83,19 @@ updateUI = ()->
 			.attr("stroke", "#FF0")
 			.attr("stroke-width", "10px")
 	_.START_MARKER.exit().remove()
+
+	_.ANSWER_LINE = _.ANSWER_LINE.data(_.ANSWER)
+
+	_.ANSWER_CIRCLE = _.ANSWER_CIRCLE.data(_.ANSWER)
+
+	_.ANSWER_TEXT = _.ANSWER_TEXT.data(_.ANSWER)
+	_.ANSWER_TEXT.enter().append("text")
+	_.ANSWER_TEXT.attr("width", (d)-> _.SQUARE_SIZE-10)
+			.attr("height", (d)-> _.SQUARE_SIZE-10)
+			.attr("x", (d,i)-> ((i % _.COL) * _.SQUARE_SIZE) + (_.SQUARE_SIZE/2) )
+			.attr("y", (d,i)-> (parseInt(i / _.COL) * _.SQUARE_SIZE) + (_.SQUARE_SIZE/2) )
+			.text((d,i) -> i)
+	_.ANSWER_TEXT.exit().remove()
 
 	return
 	
@@ -163,7 +176,9 @@ do initializeUI = ()->
 
 	# InitializeTable
 	_.TABLE = []
+	_.ANSWER = [1,2,3,4,5,6,7,8]
 	_.START = 0
+
 	for i in [1.._.COL]
 		for j in [1.._.ROW]
 			_.TABLE.push true
@@ -233,6 +248,17 @@ do initializeUI = ()->
 		do updateTableByDecreaceRow
 		do updateRow
 		do updateUI
+
+	$("#Execution").click ()->
+		$button = $(@)
+		if $button.hasClass("calucurated")
+			$button.text("CALC")
+			$button.removeClass("calucurated")
+		else
+			$button.text("CLEAR")
+			$button.addClass("calucurated")
+
+
 
 window.onresize = ()->
 	do getWindowSize

@@ -128,7 +128,7 @@ h1
 button#Execution
   -webkit-appearance: none
   font-size: 20px
-  text-shadow: 0px 1px 0px #9EF
+  text-shadow: 0px 1px 0px #00C
   font-weight: bold
   appearance: none
   border: 0px #FFF solid
@@ -137,15 +137,19 @@ button#Execution
   height: 30px
   width: 120px
   outline: none
-  color: #333
+  color: #FFF
   cursor: pointer
   background: #6CF
   &:active
     +_box-shadow((0px 2px 0px #FFF inset, 0px 2px 0px #6CF))
     line-height: 30px
-
-
-
+  &.calucurated
+    text-shadow: 0px 1px 0px #C00
+    +_box-shadow(0px 2px 0px #B69)
+    background: #F6C
+    &:active
+      +_box-shadow((0px 2px 0px #FFF inset, 0px 2px 0px #F6C))
+    
 #ChessTable
   +setOrigin(0px)
   .row 
@@ -184,4 +188,12 @@ nav > div
   font-weight: bold
   line-height: 30px
   text-align: center
+
+text
+  text-anchor: middle
+  pointer-events: none
+  dominant-baseline: middle
+  font-weight: bold
+  font-size: 30px
+  fill: #FFF
 
