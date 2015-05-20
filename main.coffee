@@ -53,7 +53,11 @@ updateUI = ()->
 	
 	_.RECT = _.RECT.data(_.TABLE)      
 	_.RECT.enter().append("rect")
-				.on("click",(d,i)-> 
+				.on("dblclick", (d,i)->
+					c "clidked"
+					_.START = i
+					updateUI()
+				).on("click",(d,i)-> 
 					_.TABLE[i] = !_.TABLE[i]
 					updateUI()
 				)
@@ -67,6 +71,18 @@ updateUI = ()->
 			.attr("stroke-width", "2px")
 
 	_.RECT.exit().remove()
+
+	_.START_MARKER = _.START_MARKER.data([_.START])
+	_.START_MARKER.enter().append("rect")
+
+	_.START_MARKER.attr("width", (d)-> _.SQUARE_SIZE-10)
+			.attr("height", (d)-> _.SQUARE_SIZE-10)
+			.attr("x", (d)-> ((d % _.COL) * _.SQUARE_SIZE)+5 )
+			.attr("y", (d)-> (parseInt(d / _.COL) * _.SQUARE_SIZE)+5 )
+			.attr("fill", "none")
+			.attr("stroke", "#FF0")
+			.attr("stroke-width", "10px")
+	_.START_MARKER.exit().remove()
 
 	return
 	
@@ -147,13 +163,24 @@ do initializeUI = ()->
 
 	# InitializeTable
 	_.TABLE = []
+	_.START = 0
 	for i in [1.._.COL]
 		for j in [1.._.ROW]
 			_.TABLE.push true
 
 	_.SVG = d3.select("#ChessTable").append("svg")
+
 	_.RECT_GROUP = _.SVG.append("g").attr("id", "Rects")
-	_.RECT = _.SVG.selectAll("rect")
+	_.START_GROUP = _.SVG.append("g").attr("id", "StartGroup")
+	_.ANSWER_GROUP = _.SVG.append("g").attr("id", "AnswerGroup")
+	
+	_.RECT = _.RECT_GROUP.selectAll("rect")
+	_.START_MARKER = _.START_GROUP.selectAll("rect")
+
+	_.ANSWER_LINE = _.ANSWER_GROUP.selectAll("path")
+	_.ANSWER_CIRCLE = _.ANSWER_GROUP.selectAll("circle")
+	_.ANSWER_TEXT = _.ANSWER_GROUP.selectAll("text")
+
 
 	do updateUI
 
