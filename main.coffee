@@ -13,6 +13,8 @@ _.TOP = _.HEADER_SIZE + _.BUTTON_SIZE + _.BUTTON_MARGIN
 _.COL = 4
 _.ROW = 4
 
+# =====================================================================================
+
 c = (dat)-> console.log dat
 
 caltivate = (num) ->
@@ -60,7 +62,7 @@ updateUI = ()->
 			.attr("height", (d)-> _.SQUARE_SIZE)
 			.attr("x", (d,i)-> (i % _.COL) * _.SQUARE_SIZE )
 			.attr("y", (d,i)-> parseInt(i / _.COL) * _.SQUARE_SIZE )
-			.attr("fill", (d)-> if d then "#F00" else "#EEE")
+			.attr("fill", (d)-> if d then "#C40" else "#EEE")
 			.attr("stroke", (d)-> if d then "#FFF" else "#FFF")
 			.attr("stroke-width", "2px")
 

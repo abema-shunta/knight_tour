@@ -121,10 +121,30 @@ body
 
 h1
   +setSpacing(0) 
-  font-size : 50px
-  line-height: 120px 
-  height: 120px 
+  font-size : 30px
+  line-height: 70px 
+  height: 70px 
   
+button#Execution
+  -webkit-appearance: none
+  font-size: 20px
+  text-shadow: 0px 1px 0px #9EF
+  font-weight: bold
+  appearance: none
+  border: 0px #FFF solid
+  +_border_radius(5px)
+  +_box-shadow(0px 2px 0px #69B)
+  height: 30px
+  width: 120px
+  outline: none
+  color: #333
+  cursor: pointer
+  background: #6CF
+  &:active
+    +_box-shadow((0px 2px 0px #FFF inset, 0px 2px 0px #6CF))
+    line-height: 30px
+
+
 
 #ChessTable
   +setOrigin(0px)
