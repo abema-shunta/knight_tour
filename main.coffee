@@ -50,14 +50,20 @@ updateUI = ()->
 	_.SVG.attr("width", _.CHESS_WIDTH).attr("height", _.CHESS_HEIGHT)
 	
 	_.RECT = _.RECT.data(_.TABLE)      
-	_.RECT.enter().append("rect")	      
+	_.RECT.enter().append("rect")
+				.on("click",(d,i)-> 
+					_.TABLE[i] = !_.TABLE[i]
+					updateUI()
+				)
+				
 	_.RECT.attr("width", (d)-> _.SQUARE_SIZE)
 			.attr("height", (d)-> _.SQUARE_SIZE)
-			.attr("x", (d,i)-> (i % _.ROW) * _.SQUARE_SIZE )
+			.attr("x", (d,i)-> (i % _.COL) * _.SQUARE_SIZE )
 			.attr("y", (d,i)-> parseInt(i / _.COL) * _.SQUARE_SIZE )
-			.attr("fill", (d)-> if d then "#F00" else "#0F0")
+			.attr("fill", (d)-> if d then "#F00" else "#EEE")
 			.attr("stroke", (d)-> if d then "#FFF" else "#FFF")
 			.attr("stroke-width", "2px")
+
 	_.RECT.exit().remove()
 
 	return
@@ -89,11 +95,14 @@ do updateRow = ()->
 updateTableByIncreaceCol = ()->
 
 	TEMP = []
-	for i in [0..(_.COL * _.ROW)-1]
+	length = (_.COL * _.ROW)-1
+	c length
+
+	for i in [0..length]
 		TEMP[i] = true
 	PCOL = _.COL-1
-	for t,i in _.TABLE.length
-		row = parseInt(PCOL/i)
+	for t,i in _.TABLE
+		row = parseInt(i/PCOL)
 		TEMP[i + row] = _.TABLE[i]
 
 	_.TABLE = TEMP
@@ -101,31 +110,36 @@ updateTableByIncreaceCol = ()->
 updateTableByDecreaceCol = ()->
 
 	TEMP = []
-	for i in [0..(_.COL * _.ROW)-1]
-		TEMP[i] = true
-	PCOL = _.COL + 1
+	length = (_.COL * _.ROW)-1
+	c length
 
-	for t,i in _.TABLE.length
-		row = parseInt(PCOL/i)
+	for i in [0..length]
+		TEMP[i] = true
+
+	PCOL = _.COL + 1
+	for i in [0..length]
+		row = parseInt(i/PCOL)
 		TEMP[i - row] = _.TABLE[i]
 
 	_.TABLE = TEMP
 
 updateTableByIncreaceRow = ()->
 	TEMP = []
-	for i in [0..(_.COL * _.ROW)-1]
+	length = (_.COL * _.ROW)-1
+	c length
+	for i in [0..length]
 		TEMP[i] = true
-	for t,i in _.TABLE.length
-		TEMP[i] = _.TABLE[i]
+	for t,i in _.TABLE
+		TEMP[i] = t
 	_.TABLE = TEMP
 
 updateTableByDecreaceRow = ()->
 	TEMP = []
-	for i in [0..(_.COL * _.ROW)-1]
+	length = (_.COL * _.ROW)-1
+	c length
+	for i in [0..length]
 		TEMP[i] = _.TABLE[i]
 	_.TABLE = TEMP
-
-
 
 do initializeUI = ()->
 
@@ -178,6 +192,7 @@ do initializeUI = ()->
 	$("#RowIncrease").click ()-> 
 
 		_.ROW = caltivate(_.ROW + 1) 
+
 		do updateTableByIncreaceRow 
 		do updateRow
 		do updateUI
@@ -185,6 +200,7 @@ do initializeUI = ()->
 	$("#RowDecrease").click ()-> 
 
 		_.ROW = caltivate(_.ROW - 1) 
+
 		do updateTableByDecreaceRow
 		do updateRow
 		do updateUI
