@@ -1,7 +1,7 @@
 _ = window.global = {}
 
-_.MAX = 10
-_.MIN = 4
+_.MAX = 8
+_.MIN = 3
 
 _.HEADER_SIZE = 120
 _.BUTTON_SIZE = 30
@@ -12,6 +12,33 @@ _.TOP = _.HEADER_SIZE + _.BUTTON_SIZE + _.BUTTON_MARGIN
 
 _.COL = 4
 _.ROW = 4
+
+_.COLOR = [
+	"#000",
+	"#000",
+	"#0FF",
+	"#F30",
+	"#6F0",
+	"#FF0",
+	"#F90",
+	"#09F",
+	"#90F",
+	"#309",
+	"#000"
+]
+_.ANOTHER_COLOR = [
+	"#FF0",
+	"#FF0",
+	"#F30",
+	"#6F0",
+	"#F30",
+	"#6F0",
+	"#F30",
+	"#6F0",
+	"#F30",
+	"#6F0",
+
+]
 
 # =====================================================================================
 
@@ -103,6 +130,8 @@ calucuration = ()->
 
 updateUI = ()->
 
+	$("body").css("background","#{_.COLOR[_.COL-1]}")
+
 	_.SQUARE_SIZE = _.WIDTH/(2*_.COL)
 	_.CHESS_WIDTH = _.SQUARE_SIZE * _.COL
 	_.CHESS_HEIGHT = _.SQUARE_SIZE * _.ROW
@@ -137,8 +166,9 @@ updateUI = ()->
 			.attr("height", (d)-> _.SQUARE_SIZE)
 			.attr("x", (d,i)-> (i % _.COL) * _.SQUARE_SIZE )
 			.attr("y", (d,i)-> parseInt(i / _.COL) * _.SQUARE_SIZE )
-			.attr("fill", (d)-> if d then "#C00" else "#EEE")
-			.attr("stroke", (d)-> if d then "#FFF" else "#FFF")
+			.attr("fill", (d)-> "#FFF")
+			.attr("opacity", (d)-> if d then "1.0" else "0.1")
+			.attr("stroke", (d)-> "#{_.COLOR[_.COL-1]}")
 			.attr("stroke-width", "2px")
 
 	_.RECT.exit().remove()
@@ -158,8 +188,9 @@ updateUI = ()->
 	_.ANSWER_LINE = _.ANSWER_LINE.data(genPathData(_.ANSWER))
 	_.ANSWER_LINE.enter().append("path")
 	_.ANSWER_LINE.attr("style", (d) -> 
-      "stroke: #00F;
-       stroke-width: 5px;"
+      "stroke: #{_.ANOTHER_COLOR[_.COL-1]};
+       stroke-width: 5px;
+       opacity: 0.7;"
     ).attr("d", (d)->"M#{gx(d.source)},#{gy(d.source)}L#{gx(d.target)},#{gy(d.target)}")
 	_.ANSWER_LINE.exit().remove()
 
@@ -169,7 +200,7 @@ updateUI = ()->
 			.attr("cx", (d,i)-> gx d )
 			.attr("cy", (d,i)-> gy d )
 			.attr("style", (d) -> 
-      	"fill: #66F;
+      	"fill: #{_.ANOTHER_COLOR[_.COL-1]};
        	 stroke-width: 0px;"
     	)
 	_.ANSWER_CIRCLE.exit().remove()
@@ -241,6 +272,7 @@ updateTableByDecreaceCol = ()->
 	_.TABLE = TEMP
 
 updateTableByIncreaceRow = ()->
+
 	TEMP = []
 	length = (_.COL * _.ROW)-1
 	c length
