@@ -1,6 +1,6 @@
 _ = window.global = {}
 
-_.MAX = 8
+_.MAX = 10
 _.MIN = 3
 
 _.HEADER_SIZE = 120
@@ -142,6 +142,9 @@ updateUI = ()->
 		top: "#{_.TOP}px"
 		left: "#{_.WIDTH/4}px"
 
+	$("#Help").css
+		top: "#{_.TOP + _.CHESS_HEIGHT}px"
+
 	$("#ColDecrease").css {top: "#{_.HEADER_SIZE}px", left: "#{_.WIDTH/4}px"} 
 	$("#ColIncrease").css {top: "#{_.HEADER_SIZE}px", left: "#{_.WIDTH*3/4 - _.BUTTON_SIZE}px"}
 	$("#ColNumber").css {top: "#{_.HEADER_SIZE}px", left: "#{_.WIDTH/2 - _.LABEL_SIZE/2}px"}
@@ -181,7 +184,7 @@ updateUI = ()->
 			.attr("x", (d)-> ((d % _.COL) * _.SQUARE_SIZE)+5 )
 			.attr("y", (d)-> (parseInt(d / _.COL) * _.SQUARE_SIZE)+5 )
 			.attr("fill", "none")
-			.attr("stroke", "#FF0")
+			.attr("stroke", "#{_.ANOTHER_COLOR[_.COL-1]}")
 			.attr("stroke-width", "10px")
 	_.START_MARKER.exit().remove()
 
