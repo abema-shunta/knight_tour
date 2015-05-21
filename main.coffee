@@ -30,6 +30,77 @@ do getWindowSize = ()->
   _.WIDTH = w.innerWidth || e.clientWidth || g.clientWidth
   _.HEIGHT = w.innerHeight|| e.clientHeight|| g.clientHeight
 
+genPathData = (answer)->
+	pathdata = []
+	source = null 
+	target = null
+	for a in answer
+		target = a 
+		pathdata.push {source: source, target: target} if source != null 
+		source = a 
+	pathdata
+
+gx = (num) -> ((num%_.COL)+0.5)*_.SQUARE_SIZE 
+gy = (num) -> (parseInt(num/_.COL)+0.5)*_.SQUARE_SIZE 
+
+getCandidates = (pos)->
+
+	candidates = []
+	x = pos % _.COL 
+	y = parseInt(pos / _.COL) 
+
+	if x-2 >= 0
+		candidates.push (y-1) * _.COL + x-2 if y-1 >= 0
+		candidates.push (y+1) * _.COL + x-2 if y+1 < _.ROW
+	if x+2 < _.COL
+		candidates.push (y-1) * _.COL + x+2 if y-1 >= 0
+		candidates.push (y+1) * _.COL + x+2 if y+1 < _.ROW
+	if y-2 >= 0
+		candidates.push (y-2) * _.COL + x-1 if x-1 >= 0
+		candidates.push (y-2) * _.COL + x+1 if x+1 < _.COL
+	if y+2 < _.ROW
+		candidates.push (y+2) * _.COL + x-1 if x-1 >= 0
+		candidates.push (y+2) * _.COL + x+1 if x+1 < _.COL
+	candidates
+
+move = (pos, m)->
+
+	return false if _.VISITED[pos] == true
+	_.VISITED[pos] = true
+
+	if m == _.ANSWER_LENGTH
+	
+		_.ANSWER.unshift(pos)
+		_.VISITED[pos] = true
+		return true
+	
+	else
+		
+		candidates = getCandidates pos
+		res = false
+
+		for candidate in candidates 
+			res = move(candidate, m+1) || res
+
+		if res == true
+			_.ANSWER.unshift(pos)
+			return true
+		else 
+			_.VISITED[pos] = false
+			return false
+			
+calucuration = ()->
+
+	_.ANSWER = []
+	_.VISITED = []
+	_.ANSWER_LENGTH = -1
+	
+	for t,i in _.TABLE 
+		_.ANSWER_LENGTH += 1 if t
+		_.VISITED[i] = !t
+
+	move(_.START, 0)
+
 updateUI = ()->
 
 	_.SQUARE_SIZE = _.WIDTH/(2*_.COL)
@@ -84,17 +155,32 @@ updateUI = ()->
 			.attr("stroke-width", "10px")
 	_.START_MARKER.exit().remove()
 
-	_.ANSWER_LINE = _.ANSWER_LINE.data(_.ANSWER)
+	_.ANSWER_LINE = _.ANSWER_LINE.data(genPathData(_.ANSWER))
+	_.ANSWER_LINE.enter().append("path")
+	_.ANSWER_LINE.attr("style", (d) -> 
+      "stroke: #00F;
+       stroke-width: 5px;"
+    ).attr("d", (d)->"M#{gx(d.source)},#{gy(d.source)}L#{gx(d.target)},#{gy(d.target)}")
+	_.ANSWER_LINE.exit().remove()
 
 	_.ANSWER_CIRCLE = _.ANSWER_CIRCLE.data(_.ANSWER)
+	_.ANSWER_CIRCLE.enter().append("circle")
+	_.ANSWER_CIRCLE.attr("r", (d)-> _.SQUARE_SIZE/4)
+			.attr("cx", (d,i)-> gx d )
+			.attr("cy", (d,i)-> gy d )
+			.attr("style", (d) -> 
+      	"fill: #66F;
+       	 stroke-width: 0px;"
+    	)
+	_.ANSWER_CIRCLE.exit().remove()
 
 	_.ANSWER_TEXT = _.ANSWER_TEXT.data(_.ANSWER)
 	_.ANSWER_TEXT.enter().append("text")
 	_.ANSWER_TEXT.attr("width", (d)-> _.SQUARE_SIZE-10)
 			.attr("height", (d)-> _.SQUARE_SIZE-10)
-			.attr("x", (d,i)-> ((i % _.COL) * _.SQUARE_SIZE) + (_.SQUARE_SIZE/2) )
-			.attr("y", (d,i)-> (parseInt(i / _.COL) * _.SQUARE_SIZE) + (_.SQUARE_SIZE/2) )
-			.text((d,i) -> i)
+			.attr("x", (d,i)-> gx d )
+			.attr("y", (d,i)-> gy d )
+			.text((d,i) -> i+1)
 	_.ANSWER_TEXT.exit().remove()
 
 	return
@@ -176,7 +262,7 @@ do initializeUI = ()->
 
 	# InitializeTable
 	_.TABLE = []
-	_.ANSWER = [1,2,3,4,5,6,7,8]
+	_.ANSWER = []
 	_.START = 0
 
 	for i in [1.._.COL]
@@ -252,13 +338,15 @@ do initializeUI = ()->
 	$("#Execution").click ()->
 		$button = $(@)
 		if $button.hasClass("calucurated")
+			_.ANSWER = []
 			$button.text("CALC")
 			$button.removeClass("calucurated")
+			do updateUI
 		else
+			do calucuration
 			$button.text("CLEAR")
 			$button.addClass("calucurated")
-
-
+			do updateUI
 
 window.onresize = ()->
 	do getWindowSize
