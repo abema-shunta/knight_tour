@@ -70,48 +70,40 @@ genPathData = (answer)->
 gx = (num) -> ((num%_.COL)+0.5)*_.SQUARE_SIZE 
 gy = (num) -> (parseInt(num/_.COL)+0.5)*_.SQUARE_SIZE 
 
-getCandidates = (pos)->
-
-	candidates = []
-	x = pos % _.COL 
-	y = parseInt(pos / _.COL) 
-
-	if x-2 >= 0
-		candidates.push (y-1) * _.COL + x-2 if y-1 >= 0
-		candidates.push (y+1) * _.COL + x-2 if y+1 < _.ROW
-	if x+2 < _.COL
-		candidates.push (y-1) * _.COL + x+2 if y-1 >= 0
-		candidates.push (y+1) * _.COL + x+2 if y+1 < _.ROW
-	if y-2 >= 0
-		candidates.push (y-2) * _.COL + x-1 if x-1 >= 0
-		candidates.push (y-2) * _.COL + x+1 if x+1 < _.COL
-	if y+2 < _.ROW
-		candidates.push (y+2) * _.COL + x-1 if x-1 >= 0
-		candidates.push (y+2) * _.COL + x+1 if x+1 < _.COL
-	candidates
-
 move = (pos, m)->
 
 	return false if _.VISITED[pos] == true
 	_.VISITED[pos] = true
 
 	if m == _.ANSWER_LENGTH
-	
+
 		_.ANSWER.unshift(pos)
 		_.VISITED[pos] = true
 		return true
 	
 	else
-		
-		candidates = getCandidates pos
 		res = false
 
-		for candidate in candidates 
-			res = move(candidate, m+1) || res
+		x = pos % _.COL 
+		y = parseInt(pos / _.COL) 
+
+		if x-2 >= 0
+			res = res || move( ((y-1)*_.COL+x-2), m+1 ) if y-1 >= 0
+			res = res || move( ((y+1)*_.COL+x-2), m+1 ) if y+1 < _.ROW
+		if x+2 < _.COL
+			res = res || move( ((y-1)*_.COL+x+2), m+1 ) if y-1 >= 0
+			res = res || move( ((y+1)*_.COL+x+2), m+1 ) if y+1 < _.ROW
+		if y-2 >= 0
+			res = res || move( ((y-2)*_.COL+x-1), m+1 ) if x-1 >= 0
+			res = res || move( ((y-2)*_.COL+x+1), m+1 ) if x+1 < _.COL
+		if y+2 < _.ROW
+			res = res || move( ((y+2)*_.COL+x-1), m+1 ) if x-1 >= 0
+			res = res || move( ((y+2)*_.COL+x+1), m+1 ) if x+1 < _.COL
 
 		if res == true
 			_.ANSWER.unshift(pos)
 			return true
+
 		else 
 			_.VISITED[pos] = false
 			return false
