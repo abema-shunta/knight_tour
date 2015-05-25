@@ -103,22 +103,45 @@ move = (pos, m)->
 		if res == true
 			_.ANSWER.unshift(pos)
 			return true
-
 		else 
 			_.VISITED[pos] = false
 			return false
 			
 calucuration = ()->
 
-	_.ANSWER = []
-	_.VISITED = []
-	_.ANSWER_LENGTH = -1
+	# _.ANSWER = []
+	# _.VISITED = []
+	# _.ANSWER_LENGTH = -1
 	
-	for t,i in _.TABLE 
-		_.ANSWER_LENGTH += 1 if t
-		_.VISITED[i] = !t
+	# for t,i in _.TABLE 
+	# 	_.ANSWER_LENGTH += 1 if t
+	# 	_.VISITED[i] = !t
 
-	move(_.START, 0)
+	# move(_.START, 0)
+
+	data_table = ""
+	for t, i in _.TABLE
+		data_table += "#{if t then 1 else 0}"
+
+	c "table=#{data_table}&start=#{_.START}&row=#{_.ROW}&col=#{_.COL}"
+
+	_.ANSWER = $.ajax
+		type: "GET"
+		url: "https://knight-tour-server.herokuapp.com/answer.json"
+		data: "table=#{data_table}&start=#{_.START}&row=#{_.ROW}&col=#{_.COL}"
+		success: ((msg)->
+			$button = $("#Execution")
+			_.ANSWER = msg.answer
+			$button.text("CLEAR")
+			$button.addClass("calucurated")
+			do updateUI
+		)
+
+	# $button = $("#Execution")
+	# $button.text("CLEAR")
+	# $button.addClass("calucurated")
+	# do updateUI
+
 
 updateUI = ()->
 
@@ -309,7 +332,6 @@ do initializeUI = ()->
 	_.ANSWER_CIRCLE = _.ANSWER_GROUP.selectAll("circle")
 	_.ANSWER_TEXT = _.ANSWER_GROUP.selectAll("text")
 
-
 	do updateUI
 
 	$("#ColIncrease").click ()-> 
@@ -371,9 +393,6 @@ do initializeUI = ()->
 			do updateUI
 		else
 			do calucuration
-			$button.text("CLEAR")
-			$button.addClass("calucurated")
-			do updateUI
 
 window.onresize = ()->
 	do getWindowSize
